@@ -67,9 +67,7 @@ app.all('*', function(req, res, next) {
 * */
 //案例展示
 app.use('/admin', require('./routes/admin'));
-
-
-
+app.use('/user', require('./routes/user'));
 
 // app.use('/api', require('./routers/api'));
 // app.use('/', require('./routes/user'));

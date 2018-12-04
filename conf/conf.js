@@ -6,6 +6,7 @@ var pool = mysql.createPool({
     password : 'scpcxb',
     database : 'jiehang',
     port:3306,
+    multipleStatements: true
 });
 function query(sql,values,callback){
     pool.getConnection(function(err,connection){
