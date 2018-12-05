@@ -24,7 +24,7 @@ router.post('/team', function (req, res) {
   let sql = "SELECT COUNT(*) FROM student where isShow=0";
   let sql2 = "SELECT*FROM student where isShow=0 limit" + " " + (pageNo - 1) * pageSize + "," + (pageNo * pageSize);
   db.query(sql, function (err, results) {
-    if (err) {} else {
+    if (err) { } else {
       allCount = results[0]['COUNT(*)'];
       back(allCount)
     }
@@ -32,7 +32,7 @@ router.post('/team', function (req, res) {
 
   function back(allCount) {
     db.query(sql2, function (err, results) {
-      if (err) {} else {
+      if (err) { } else {
         var allPage = allCount / pageSize;
         var pageStr = allPage.toString();
         // 不能整除
@@ -67,7 +67,7 @@ router.post('/baoming', function (req, res) {
   let sql = 'insert  into  reportList(studentName,phone,wantCountry,wantSchool,QQ,email,major,xueli,isShow) values(?,?,?,?,?,?,?,?,?)'
   var params = [studentName, phone, wantCountry, wantSchool, QQ, email, major, xueli, isShow];
   db.query(sql, params, function (err, results) {
-    if (err) {} else {
+    if (err) { } else {
       res.json({
         msg: '操作成功',
         status: '200',
@@ -88,7 +88,7 @@ router.post('/liuyan', function (req, res) {
   let sql = 'insert  into  MessageBoard(username,phone,QQ,email,content,isShow) values(?,?,?,?,?,?)'
   var param = [username, phone, QQ, email, content, isShow];
   db.query(sql, param, function (err, results) {
-    if (err) {} else {
+    if (err) { } else {
       res.json({
         msg: '操作成功',
         status: '200',
@@ -118,7 +118,7 @@ router.post('/companyprofile', function (req, res) {
   let isShow = 0;
   let sql = `SELECT * FROM Companyprofile where isShow=0 and type=${type}`;
   db.query(sql, function (err, results) {
-    if (err) {} else {
+    if (err) { } else {
       res.json({
         msg: '操作成功',
         status: '200',
@@ -129,45 +129,46 @@ router.post('/companyprofile', function (req, res) {
 });
 
 // 头部导航国家的获取
-router.post('/getcontry', function (req, res) {
-  let sql = `SELECT Id,typeid FROM countryconfig where isShow=0;SELECT  country  FROM countryconfig where isShow=0;`;
+router.post('/getcountry', function (req, res) {
+  let sql = `SELECT * FROM countryconfig   where isShow=0  group by  typeid`;
   db.query(sql, function (err, results) {
-    if (err) {} else {
+    if (err) {
       res.json({
-        msg: '操作成功',
-        status: '200',
-        data: results
+        msg: '失败',
+        status: '0',
+        msg: err
       })
+    } else {
+      let arr = [];
+      let arrStr = "";
+      var getData1 = new Promise(function (resolve, reject) {
+        results.map((item, index) => {
+          let sql = `SELECT * FROM countryconfig   where isShow=0  and  typeid='${item.typeid}'`;
+          db.query(sql, function (err, respon) {
+            if (err) {
+              reject(err);
+            } else {             
+              arrStr = { typeid: item.typeid, countrylist: respon };
+              arr.push(arrStr);
+              if(index==(results.length-1)){
+                resolve(arr)
+              }
+              
+            }
+          })
+        })
+      })
+      getData1.then(function (respon) {
+        res.json({
+          msg: '成功',
+          status: 200,
+          data: respon
+        })
+      })
+
     }
   });
 });
-
-[
-    {
-        typeid:zo,
-        countrylist:[
-            {Id:19,country:捷克},
-            {Id:21,country:日本}
-        ]
-    },
-    {
-        typeid:do,
-        countrylist:[
-           {Id:20,country:美国}
-       ]
-    }
-]
-
-
-
-
-
-
-
-
-
-
-
 
 
 
