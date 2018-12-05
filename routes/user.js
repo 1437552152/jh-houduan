@@ -130,7 +130,7 @@ router.post('/companyprofile', function (req, res) {
 
 // 头部导航国家的获取
 router.post('/getcontry', function (req, res) {
-  let sql = `SELECT * FROM countryconfig where isShow=0`;
+  let sql = `SELECT Id,typeid FROM countryconfig where isShow=0;SELECT  country  FROM countryconfig where isShow=0;`;
   db.query(sql, function (err, results) {
     if (err) {} else {
       res.json({
@@ -142,7 +142,21 @@ router.post('/getcontry', function (req, res) {
   });
 });
 
-
+[
+    {
+        typeid:zo,
+        countrylist:[
+            {Id:19,country:捷克},
+            {Id:21,country:日本}
+        ]
+    },
+    {
+        typeid:do,
+        countrylist:[
+           {Id:20,country:美国}
+       ]
+    }
+]
 
 
 
