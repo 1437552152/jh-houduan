@@ -588,23 +588,6 @@ router.post('/country', function (req, res) {
   });
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //获取当前时间
 function formatDate() {
   //把时间戳转化为日期对象

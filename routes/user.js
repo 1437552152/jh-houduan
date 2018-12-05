@@ -15,44 +15,6 @@ router.use(function (req, res, next) {
 // 字段说明
 //  isShow：0 表示展示      1 表示物理删除即隐藏
 
-//----------------------------------------案例开始------------------
-// 获得案例
-router.post('/team', function (req, res) {
-  let allCount;
-  let pageNo = parseInt(req.body.pageNo);
-  let pageSize = parseInt(req.body.pageSize);
-  let sql = "SELECT COUNT(*) FROM student where isShow=0";
-  let sql2 = "SELECT*FROM student where isShow=0 limit" + " " + (pageNo - 1) * pageSize + "," + (pageNo * pageSize);
-  db.query(sql, function (err, results) {
-    if (err) { } else {
-      allCount = results[0]['COUNT(*)'];
-      back(allCount)
-    }
-  });
-
-  function back(allCount) {
-    db.query(sql2, function (err, results) {
-      if (err) { } else {
-        var allPage = allCount / pageSize;
-        var pageStr = allPage.toString();
-        // 不能整除
-        if (pageStr.indexOf('.') > 0) {
-          allPage = parseInt(pageStr.split('.')[0]) + 1;
-        }
-        res.json({
-          msg: '操作成功',
-          status: '200',
-          totalPages: allPage,
-          data: results,
-          total: allCount,
-          currentPage: parseInt(pageNo)
-        })
-      }
-    });
-  }
-});
-
-
 //首页数据
 router.post('/baoming', function (req, res) {
   let studentName = req.body.studentName;
@@ -172,31 +134,110 @@ router.post('/getcountry', function (req, res) {
 
 
 
-// 首页信息
-router.post('/index', function (req, res) {
+// 首页学校信息
+router.post('/indexSchool', function (req, res) {
   let isShow = 0;
-  let sql = "SELECT * FROM Companyprofile where isShow=0;SELECT * FROM MessageBoard where isShow=0 and status=1";
-  db.query(sql, {}, function (err, results) {
+  let sql = `SELECT * FROM  famousSchools   where isShow=0  group by  country`;
+  db.query(sql, function (err, results) {
     if (err) {
-      console.log(err)
-    } else {
       res.json({
-        msg: '操作成功',
-        status: '200',
-        data: results[0],
-        data1: results[1],
+        msg: '失败',
+        status: '0',
+        msg: err
       })
+    } else {
+      let arr = [];
+      let arrStr = "";
+      var getData1 = new Promise(function (resolve, reject) {
+        results.map((item, index) => {
+          let sql = `SELECT * FROM famousSchools   where isShow=0  and  country='${item.country}'`;
+          db.query(sql, function (err, respon) {
+            if (err) {
+              reject(err);
+            } else {             
+              arrStr = { country: item.country,amount:item.amount, schoolList: respon };
+              arr.push(arrStr);
+              if(index==(results.length-1)){
+                resolve(arr)
+              }
+              
+            }
+          })
+        })
+      })
+      getData1.then(function (respon) {
+        res.json({
+          msg: '成功',
+          status: 200,
+          data: respon
+        })
+      })
+
+    }
+  });
+});
+
+// 获取首页的留学信息
+router.post('/liuxueInformation', function (req, res) {
+  let isShow = 0;
+  let sql = `SELECT * FROM  news   where isShow=0  group by  country`;
+  db.query(sql, function (err, results) {
+    if (err) {
+      res.json({
+        msg: '失败',
+        status: '0',
+        msg: err
+      })
+    } else {
+      let arr = [];
+      let arrStr = "";
+      var getData1 = new Promise(function (resolve, reject) {
+        results.map((item, index) => {
+          let sql = `SELECT * FROM  news   where isShow=0  and  country='${item.country}'`;
+          db.query(sql, function (err, respon) {
+            if (err) {
+              reject(err);
+            } else {             
+              arrStr = { country: item.country,newsList: respon };
+              arr.push(arrStr);
+              if(index==(results.length-1)){
+                resolve(arr)
+              }
+              
+            }
+          })
+        })
+      })
+      getData1.then(function (respon) {
+        res.json({
+          msg: '成功',
+          status: 200,
+          data: respon
+        })
+      })
+
     }
   });
 });
 
 
 
+// 拿到国家的轮播图
 
-
-
-
-
+router.post('/banner', function (req, res) {
+  let id = req.query.id;
+  let isShow = 0;
+  let sql = `SELECT * FROM countryconfig where isShow=0 and Id=${id}`;
+  db.query(sql, function (err, results) {
+    if (err) { } else {
+      res.json({
+        msg: '操作成功',
+        status: '200',
+        data: results
+      })
+    }
+  });
+});
 
 
 
