@@ -15,7 +15,7 @@ router.use(function (req, res, next) {
 // 字段说明
 //  isShow：0 表示展示      1 表示物理删除即隐藏
 
-//首页数据
+//首页报名数据
 router.post("/baoming", function (req, res) {
   let studentName = req.body.studentName;
   let phone = req.body.phone;
@@ -26,6 +26,13 @@ router.post("/baoming", function (req, res) {
   let major = req.body.major;
   let xueli = req.body.xueli;
   let isShow = 0;
+  if (studentName == '' || phone == '' || wantCountry == '' || wantCountry == '' || wantSchool == "" || QQ == "" || email == "" || major == "" || xueli == '') {
+    res.json({
+      msg: "提交失败,请完善表单",
+      status: "0"
+    });
+    return false;
+  }
   let sql =
     "insert  into  reportList(studentName,phone,wantCountry,wantSchool,QQ,email,major,xueli,isShow) values(?,?,?,?,?,?,?,?,?)";
   var params = [
@@ -57,6 +64,13 @@ router.post("/liuyan", function (req, res) {
   let email = req.body.email;
   let content = req.body.content;
   let isShow = 0;
+  if (username == '' || phone == '' || QQ == "" || email == "" || content == "") {
+    res.json({
+      msg: "提交失败,请完善表单",
+      status: "0"
+    });
+    return false;
+  }
   let sql =
     "insert  into  MessageBoard(username,phone,QQ,email,content,isShow) values(?,?,?,?,?,?)";
   var param = [username, phone, QQ, email, content, isShow];
@@ -145,7 +159,10 @@ router.post("/getcountry", function (req, res) {
     }
   });
 });
-// 首页学校信息
+
+
+// -------------------------------------------------------------------------------------------------------------------------
+// 首页各所学校信息
 router.post("/indexSchool", function (req, res) {
   let isShow = 0;
   let sql = `SELECT * FROM  famousSchools   where isShow=0  group by  country`;
@@ -192,7 +209,55 @@ router.post("/indexSchool", function (req, res) {
   });
 });
 
-// 获取首页的留学信息
+// -----------------------------------------------------------------------------------------------------------------
+//一个学校的详情
+router.get("/school/detail", function (req, res) {
+  // let id = 1;
+  let id = req.query.id;
+  let sql = "SELECT * FROM famousSchools where Id=" + id;
+  db.query(sql, function (err, results) {
+    if (err) {} else {
+      res.json({
+        msg: "操作成功",
+        status: "200",
+        data: results
+      });
+    }
+  });
+});
+// 一篇文章详情
+router.get("/news/detail", function (req, res) {
+  let id = 1;
+  // let id = req.query.id;
+  let sql = "SELECT * FROM news where id=" + id;
+  db.query(sql, function (err, results) {
+    if (err) {} else {
+      res.json({
+        msg: "操作成功",
+        status: "200",
+        data: results
+      });
+    }
+  });
+});
+
+//获取套餐
+router.get("/price/detail", function (req, res) {
+  let id = 1;
+  // let id = req.query.id;
+  let sql = "SELECT * FROM pricemeal where Id=" + id;
+  db.query(sql, function (err, results) {
+    if (err) {} else {
+      res.json({
+        msg: "操作成功",
+        status: "200",
+        data: results
+      });
+    }
+  });
+});
+
+// 获取首页的热点文章
 router.post("/liuxueInformation", function (req, res) {
   let isShow = 0;
   let sql = `SELECT * FROM  news   where isShow=0  group by  country`;
@@ -237,11 +302,10 @@ router.post("/liuxueInformation", function (req, res) {
     }
   });
 });
-
 // 拿到国家的轮播图
-router.post("/banner", function (req, res) {
+router.get("/banner", function (req, res) {
+  // let id = 19;
   let id = req.query.id;
-  let isShow = 0;
   let sql = `SELECT * FROM countryconfig where isShow=0 and Id=${id}`;
   db.query(sql, function (err, results) {
     if (err) {} else {
@@ -253,6 +317,28 @@ router.post("/banner", function (req, res) {
     }
   });
 });
+// -----------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //获取当前时间
 function formatDate() {

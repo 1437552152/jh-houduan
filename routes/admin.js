@@ -770,7 +770,7 @@ router.post("/school/update", function (req, res) {
   });
 });
 
-//公司详情
+//一个学校的详情
 router.post("/school/detail", function (req, res) {
   let id = req.body.id;
   let sql = "SELECT * FROM famousSchools where Id=" + id;
@@ -892,7 +892,7 @@ router.post("/price/update", function (req, res) {
 });
 
 //一个价格套餐详情
-router.post("/school/detail", function (req, res) {
+router.post("/price/detail", function (req, res) {
   let id = req.body.id;
   let sql = "SELECT * FROM pricemeal where Id=" + id;
   db.query(sql, function (err, results) {
@@ -907,127 +907,7 @@ router.post("/school/detail", function (req, res) {
 });
 //------------------------------------------------------ 价格套餐结束  ------------------------------------------------------------
 
-
-
 //------------------------------- 该国留学的优势--------------------------------------
-// 获得套餐
-router.post("/priceList", function (req, res) {
-  let allCount;
-  let pageNo = parseInt(req.body.pageNo);
-  let pageSize = parseInt(req.body.pageSize);
-  let sql = "SELECT COUNT(*) FROM pricemeal where isShow=0";
-  let sql2 =
-    "SELECT*FROM pricemeal where isShow=0 limit" +
-    " " +
-    (pageNo - 1) * pageSize +
-    "," +
-    pageNo * pageSize;
-  db.query(sql, function (err, results) {
-    if (err) {} else {
-      allCount = results[0]["COUNT(*)"];
-      back(allCount);
-    }
-  });
-
-  function back(allCount) {
-    db.query(sql2, function (err, results) {
-      if (err) {
-        res.json({
-          msg: err,
-          status: "0"
-        });
-      } else {
-        var allPage = allCount / pageSize;
-        var pageStr = allPage.toString();
-        // 不能整除
-        if (pageStr.indexOf(".") > 0) {
-          allPage = parseInt(pageStr.split(".")[0]) + 1;
-        }
-        res.json({
-          msg: "操作成功",
-          status: "200",
-          totalPages: allPage,
-          data: results,
-          total: allCount,
-          currentPage: parseInt(pageNo)
-        });
-      }
-    });
-  }
-});
-
-//删除一个套餐
-router.post("/price/delete", function (req, res) {
-  let id = req.body.Id;
-  let sql = "UPDATE pricemeal  set isShow=? where Id=?";
-  let param = ["1", id];
-  db.query(sql, param, function (err, results) {
-    if (err) {} else {
-      res.json({
-        msg: "操作成功",
-        status: "200"
-      });
-    }
-  });
-});
-//增加一个套餐
-router.post("/price/add", function (req, res) {
-  let des = req.body.des;
-  let country = req.body.country;
-  let price = req.body.price;
-  let addtime = req.body.addtime;
-  let address = req.body.address;
-  let isShow = 0;
-  let sql = "insert  into  pricemeal(des,country,price,addtime,address,isShow) values(?,?,?,?,?,?)";
-  var param = [des, country, price, addtime, address, isShow];
-  db.query(sql, param, function (err, results) {
-    if (err) {
-      console.log(err)
-    } else {
-      res.json({
-        msg: "操作成功",
-        status: "200"
-      });
-    }
-  });
-});
-// 修改一个套餐
-router.post("/price/update", function (req, res) {
-  let des = req.body.des;
-  let country = req.body.country;
-  let price = req.body.price;
-  let addtime = req.body.addtime;
-  let address = req.body.address;
-  let Id = req.body.Id;
-  let sql = "UPDATE pricemeal SET des=?,country=?,price=?,addtime=?,address=? where Id=?";
-  var param = [des, country, price, addtime, address, Id];
-  db.query(sql, param, function (err, results) {
-    if (err) {
-      console.log(err)
-    } else {
-      res.json({
-        msg: "操作成功",
-        status: "200"
-      });
-    }
-  });
-});
-
-//一个价格套餐详情
-router.post("/school/detail", function (req, res) {
-  let id = req.body.id;
-  let sql = "SELECT * FROM pricemeal where Id=" + id;
-  db.query(sql, function (err, results) {
-    if (err) {} else {
-      res.json({
-        msg: "操作成功",
-        status: "200",
-        data: results
-      });
-    }
-  });
-});
-
 
 
 

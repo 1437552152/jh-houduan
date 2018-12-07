@@ -53,7 +53,6 @@ app.all('*', function (req, res, next) {
 //     if (req.cookies.get('userInfo')) {
 //         try {
 //             req.userInfo = JSON.parse(req.cookies.get('userInfo'));
-
 //             //获取当前登录用户的类型，是否是管理员
 //             User.findById(req.userInfo._id).then(function(userInfo) {
 //                 req.userInfo.isAdmin = Boolean(userInfo.isAdmin);
