@@ -1,4 +1,4 @@
-var express = require("express");
+﻿var express = require("express");
 var router = express.Router();
 var db = require("../conf/conf.js");
 var formaDate = require("../utils/date.js");
@@ -17,16 +17,16 @@ router.use(function (req, res, next) {
 
 //首页报名数据
 router.post("/baoming", function (req, res) {
-  let studentName = req.body.studentName;
-  let phone = req.body.phone;
-  let wantCountry = req.body.wantCountry;
-  let wantSchool = req.body.wantSchool;
-  let QQ = req.body.QQ;
-  let email = req.body.email;
-  let major = req.body.major;
-  let xueli = req.body.xueli;
+  let studentName = req.query.studentName;
+  let phone = req.query.phone;
+  let wantCountry = req.query.wantCountry;
+  let wantSchool = req.query.wantSchool;
+  let QQ = req.query.QQ;
+  let email = req.query.email;
+  let major = req.query.major;
+  let xueli = req.query.xueli;
   let isShow = 0;
-  if (studentName == '' || phone == '' || wantCountry == '' || wantCountry == '' || wantSchool == "" || QQ == "" || email == "" || major == "" || xueli == '') {
+  if (studentName == '' || phone == '' || wantCountry == '' || wantSchool == "" || QQ == "" || email == "") {
     res.json({
       msg: "提交失败,请完善表单",
       status: "0"
@@ -116,9 +116,9 @@ router.post("/companyprofile", function (req, res) {
 });
 
 // 头部导航国家的获取
-router.post("/getcountry", function (req, res) {
+router.get("/getcountry", (req, res) => {
   let sql = `SELECT * FROM countryconfig   where isShow=0  group by  typeid`;
-  db.query(sql, function (err, results) {
+  db.query(sql, (err, results) => {
     if (err) {
       res.json({
         msg: "失败",
@@ -126,39 +126,36 @@ router.post("/getcountry", function (req, res) {
         msg: err
       });
     } else {
-      let arr = [];
-      let arrStr = "";
-      var getData1 = new Promise(function (resolve, reject) {
-        results.map((item, index) => {
-          let sql = `SELECT * FROM countryconfig   where isShow=0  and  typeid='${
-            item.typeid
-          }'`;
-          db.query(sql, function (err, respon) {
-            if (err) {
-              reject(err);
-            } else {
-              arrStr = {
-                typeid: item.typeid,
-                countrylist: respon
-              };
-              arr.push(arrStr);
-              if (index == results.length - 1) {
-                resolve(arr);
-              }
-            }
-          });
-        });
-      });
+      var getData1 = Promise.all(results.map(item => {
+        let sql = `SELECT * FROM countryconfig   where isShow=0  and  typeid='${
+          item.typeid
+        }'`;
+        return new Promise((resolve, reject) => db.query(sql, (err, respon) => {
+          if (err) {
+            reject(err);
+          } else {        
+            resolve({
+              typeid: item.typeid,
+              countrylist: respon
+            });
+          }
+        }));
+      }));
       getData1.then(function (respon) {
         res.json({
           msg: "成功",
           status: 200,
           data: respon
         });
-      });
+      }).catch(err => res.json({
+        msg: "失败",
+        status: "0",
+        msg: err
+      }));
     }
   });
 });
+
 
 
 // -------------------------------------------------------------------------------------------------------------------------
