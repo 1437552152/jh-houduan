@@ -58,13 +58,15 @@ router.post("/baoming", function (req, res) {
 
 //留言表单
 router.post("/liuyan", function (req, res) {
-  let username = req.body.username;
-  let phone = req.body.phone;
-  let QQ = req.body.QQ;
-  let email = req.body.email;
-  let content = req.body.content;
+console.log(req)
+  let username = req.query.username;
+  let phone = req.query.phone;
+  let QQ = req.query.QQ;
+  let email = req.query.email;
+  let content = req.query.content;
   let isShow = 0;
-  if (username == '' || phone == '' || QQ == "" || email == "" || content == "") {
+  let addtime = formatDate();
+  if (username == null || phone ==null || content == null) {
     res.json({
       msg: "提交失败,请完善表单",
       status: "0"
@@ -72,8 +74,8 @@ router.post("/liuyan", function (req, res) {
     return false;
   }
   let sql =
-    "insert  into  MessageBoard(username,phone,QQ,email,content,isShow) values(?,?,?,?,?,?)";
-  var param = [username, phone, QQ, email, content, isShow];
+    "insert  into  MessageBoard(username,phone,QQ,email,content,isShow,addtime) values(?,?,?,?,?,?,?)";
+  var param = [username, phone, QQ, email, content, isShow,addtime];
   db.query(sql, param, function (err, results) {
     if (err) {} else {
       res.json({
@@ -84,11 +86,15 @@ router.post("/liuyan", function (req, res) {
   });
 });
 // 留言列表
-router.post("/liuyan/list", function (req, res) {
+router.get("/liuyan/list", function (req, res) {
   let sql = "SELECT * FROM MessageBoard where isShow=0 and status=1";
   db.query(sql, function (err, results) {
     if (err) {
-      console.log(err);
+      res.json({
+        msg: "操作成功",
+        status: "0",
+        data: "操作数据库失败"
+      });
     } else {
       res.json({
         msg: "操作成功",
@@ -160,10 +166,9 @@ router.get("/getcountry", (req, res) => {
 
 // -------------------------------------------------------------------------------------------------------------------------
 // 首页各所学校信息
-router.post("/indexSchool", function (req, res) {
-  let isShow = 0;
+router.get("/indexSchool", (req, res) => {
   let sql = `SELECT * FROM  famousSchools   where isShow=0  group by  country`;
-  db.query(sql, function (err, results) {
+  db.query(sql, (err, results) => {
     if (err) {
       res.json({
         msg: "失败",
@@ -171,40 +176,46 @@ router.post("/indexSchool", function (req, res) {
         msg: err
       });
     } else {
-      let arr = [];
-      let arrStr = "";
-      var getData1 = new Promise(function (resolve, reject) {
-        results.map((item, index) => {
-          let sql = `SELECT * FROM famousSchools   where isShow=0  and  country='${
-            item.country
-          }'`;
-          db.query(sql, function (err, respon) {
-            if (err) {
-              reject(err);
-            } else {
-              arrStr = {
-                country: item.country,
-                amount: item.amount,
-                schoolList: respon
-              };
-              arr.push(arrStr);
-              if (index == results.length - 1) {
-                resolve(arr);
-              }
-            }
-          });
-        });
-      });
+      var getData1 = Promise.all(results.map(item => {
+        let sql = `SELECT * FROM famousSchools   where isShow=0  and  country='${
+          item.country
+        }'`;
+        return new Promise((resolve, reject) => db.query(sql, (err, respon) => {
+          if (err) {
+            reject(err);
+          } else {        
+            resolve({
+              country: item.country,
+              countrylist: respon
+            });
+          }
+        }));
+      }));
       getData1.then(function (respon) {
         res.json({
           msg: "成功",
           status: 200,
           data: respon
         });
-      });
+      }).catch(err => res.json({
+        msg: "失败",
+        status: "0",
+        msg: err
+      }));
     }
   });
 });
+
+
+
+
+
+
+
+
+
+
+
 
 // -----------------------------------------------------------------------------------------------------------------
 //一个学校的详情
