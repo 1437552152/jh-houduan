@@ -79,7 +79,7 @@ console.log(req)
   db.query(sql, param, function (err, results) {
     if (err) {} else {
       res.json({
-        msg: "操作成功",
+        msg: "留言成功",
         status: "200"
       });
     }
@@ -107,6 +107,7 @@ router.get("/liuyan/list", function (req, res) {
 
 // 公司简介
 router.post("/companyprofile", function (req, res) {
+console.log(req)
   let type = req.query.type;
   let isShow = 0;
   let sql = `SELECT * FROM Companyprofile where isShow=0 and type=${type}`;

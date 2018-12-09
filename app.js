@@ -32,7 +32,7 @@ swig.setDefaults({
 });
 //bodyparser设置
 app.use(bodyParser.urlencoded({
-  extended: false
+  extended: true
 }));
 
 //设置跨域访问
@@ -42,7 +42,7 @@ app.all('*', function (req, res, next) {
   //Access-Control-Allow-Headers ,可根据浏览器的F12查看,把对应的粘贴在这里就行
   res.header('Access-Control-Allow-Headers', 'Content-Type');
   res.header('Access-Control-Allow-Methods', '*');
-  res.header('Content-Type', 'application/json;charset=utf-8');
+  res.header('Content-Type', 'application/x-www-form-urlencoded;charset=UTF-8');
   next();
 });
 // //设置cookie
