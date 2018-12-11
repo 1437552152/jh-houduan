@@ -420,7 +420,6 @@ router.post("/news/delete", function (req, res) {
 
 // 公司简介--------------------------------
 router.post("/company", function (req, res) {
-  console.log(req)
   let sql = "SELECT * FROM Companyprofile where isShow=0";
   db.query(sql, function (err, results) {
     if (err) {} else {
@@ -486,7 +485,6 @@ router.post("/company/add", function (req, res) {
 router.post("/company/update", function (req, res) {
   let keywords = req.body.keywords;
   let type = req.body.type;
-  //   let language = req.body.language;
   let content = req.body.content;
   let Id = req.body.Id;
   let sql = "UPDATE Companyprofile SET keywords=?,type=?,content=?  where Id=?";
@@ -756,7 +754,6 @@ router.post("/school/update", function (req, res) {
   let logo = req.body.pic
   let Id = req.body.Id;
   let sql = "UPDATE famousSchools SET schoolName=?,des=?,acceptanceRate=?,country=?,content=?,logo=? where Id=?";
-  console.log(sql)
   var param = [schoolName, des, acceptanceRate, country, content, logo, Id];
   db.query(sql, param, function (err, results) {
     if (err) {
@@ -908,17 +905,6 @@ router.post("/price/detail", function (req, res) {
 //------------------------------------------------------ 价格套餐结束  ------------------------------------------------------------
 
 //------------------------------- 该国留学的优势--------------------------------------
-
-
-
-
-
-
-
-
-
-
-
 
 //获取当前时间
 function formatDate() {
