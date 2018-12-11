@@ -31,20 +31,32 @@ swig.setDefaults({
   cache: false
 });
 //bodyparser设置
+<<<<<<< HEAD
 app.use(
   bodyParser.urlencoded({
     extended: true
   })
 );
+=======
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+>>>>>>> 3466c26f690f3da0c3fa6f9435e38e5b099591f1
 
 //设置跨域访问
 //设置允许跨域访问该服务.
 app.all("*", function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   //Access-Control-Allow-Headers ,可根据浏览器的F12查看,把对应的粘贴在这里就行
+<<<<<<< HEAD
   res.header("Access-Control-Allow-Headers", "Content-Type");
   res.header("Access-Control-Allow-Methods", "*");
   res.header("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+=======
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  res.header('Access-Control-Allow-Methods', '*');
+  res.header('Content-Type', 'application/x-www-form-urlencoded;charset=UTF-8');
+>>>>>>> 3466c26f690f3da0c3fa6f9435e38e5b099591f1
   next();
 });
 // //设置cookie
@@ -73,6 +85,12 @@ app.all("*", function(req, res, next) {
  * 根据不同的功能划分模块
  * */
 //案例展示
+<<<<<<< HEAD
 app.use("/admin", require("./routes/admin"));
 app.use("/user", require("./routes/user"));
 app.listen(8080);
+=======
+app.use('/admin', require('./routes/admin'));
+app.use('/user', require('./routes/user'));
+app.listen(8888);
+>>>>>>> 3466c26f690f3da0c3fa6f9435e38e5b099591f1
