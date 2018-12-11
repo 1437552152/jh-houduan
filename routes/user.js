@@ -17,11 +17,7 @@ router.use(function (req, res, next) {
 
 //首页报名数据
 router.post("/baoming", function (req, res) {
-<<<<<<< HEAD
   let studentName = req.query.username;
-=======
-  let studentName = req.query.studentName;
->>>>>>> 3466c26f690f3da0c3fa6f9435e38e5b099591f1
   let phone = req.query.phone;
   let wantCountry = req.query.wantCountry;
   let wantSchool = req.query.wantSchool;
@@ -29,7 +25,6 @@ router.post("/baoming", function (req, res) {
   let email = req.query.email;
   let major = req.query.major;
   let xueli = req.query.xueli;
-<<<<<<< HEAD
   let isShow = 0;
   if (studentName == null || phone == null || wantCountry == null || major == null || studentName == '' || phone == '' || wantCountry == '' || major == '') {
     res.json({
@@ -69,10 +64,6 @@ router.post("/tankuangbaoming", function (req, res) {
   let xueli = req.body.xueli;
   let isShow = 0;
   if (studentName == null || phone == null || wantCountry == null || major == null || studentName == '' || phone == '' || wantCountry == '' || major == '') {
-=======
-  let isShow = 0;
-  if (studentName == '' || phone == '' || wantCountry == '' || wantSchool == "" || QQ == "" || email == "") {
->>>>>>> 3466c26f690f3da0c3fa6f9435e38e5b099591f1
     res.json({
       msg: "提交失败,请完善表单",
       status: "0"
@@ -99,11 +90,7 @@ router.post("/tankuangbaoming", function (req, res) {
 });
 //留言表单
 router.post("/liuyan", function (req, res) {
-<<<<<<< HEAD
   console.log(req)
-=======
-console.log(req)
->>>>>>> 3466c26f690f3da0c3fa6f9435e38e5b099591f1
   let username = req.query.username;
   let phone = req.query.phone;
   let QQ = req.query.QQ;
@@ -111,11 +98,7 @@ console.log(req)
   let content = req.query.content;
   let isShow = 0;
   let addtime = formatDate();
-<<<<<<< HEAD
   if (username == null || phone == null || content == null) {
-=======
-  if (username == null || phone ==null || content == null) {
->>>>>>> 3466c26f690f3da0c3fa6f9435e38e5b099591f1
     res.json({
       msg: "提交失败,请完善表单",
       status: "0"
@@ -124,11 +107,7 @@ console.log(req)
   }
   let sql =
     "insert  into  MessageBoard(username,phone,QQ,email,content,isShow,addtime) values(?,?,?,?,?,?,?)";
-<<<<<<< HEAD
   var param = [username, phone, QQ, email, content, isShow, addtime];
-=======
-  var param = [username, phone, QQ, email, content, isShow,addtime];
->>>>>>> 3466c26f690f3da0c3fa6f9435e38e5b099591f1
   db.query(sql, param, function (err, results) {
     if (err) {} else {
       res.json({
@@ -140,11 +119,7 @@ console.log(req)
 });
 // 留言列表
 router.get("/liuyan/list", function (req, res) {
-<<<<<<< HEAD
   let sql = "SELECT * FROM MessageBoard where isShow=0 and status=1 limit 8";
-=======
-  let sql = "SELECT * FROM MessageBoard where isShow=0 and status=1";
->>>>>>> 3466c26f690f3da0c3fa6f9435e38e5b099591f1
   db.query(sql, function (err, results) {
     if (err) {
       res.json({
@@ -164,11 +139,7 @@ router.get("/liuyan/list", function (req, res) {
 
 // 公司简介
 router.post("/companyprofile", function (req, res) {
-<<<<<<< HEAD
   console.log(req)
-=======
-console.log(req)
->>>>>>> 3466c26f690f3da0c3fa6f9435e38e5b099591f1
   let type = req.query.type;
   let sql = `SELECT * FROM Companyprofile where isShow=0 and type=${type}`;
   db.query(sql, function (err, results) {
@@ -200,11 +171,7 @@ router.get("/getcountry", (req, res) => {
         return new Promise((resolve, reject) => db.query(sql, (err, respon) => {
           if (err) {
             reject(err);
-<<<<<<< HEAD
           } else {
-=======
-          } else {        
->>>>>>> 3466c26f690f3da0c3fa6f9435e38e5b099591f1
             resolve({
               typeid: item.typeid,
               countrylist: respon
@@ -243,20 +210,11 @@ router.get("/indexSchool", (req, res) => {
     } else {
       var getData1 = Promise.all(results.map(item => {
         let sql = `SELECT * FROM famousSchools   where isShow=0  and  country='${
-<<<<<<< HEAD
           item.country}' limit 8`;
         return new Promise((resolve, reject) => db.query(sql, (err, respon) => {
           if (err) {
             reject(err);
           } else {
-=======
-          item.country
-        }'`;
-        return new Promise((resolve, reject) => db.query(sql, (err, respon) => {
-          if (err) {
-            reject(err);
-          } else {        
->>>>>>> 3466c26f690f3da0c3fa6f9435e38e5b099591f1
             resolve({
               country: item.country,
               countrylist: respon
@@ -279,31 +237,11 @@ router.get("/indexSchool", (req, res) => {
   });
 });
 
-<<<<<<< HEAD
 //得到学校详情
 router.post("/getschooldetail", function (req, res) {
   console.log(req)
   let id = req.query.Id;
   let sql = `SELECT * FROM famousSchools where isShow=0 and Id=${id}`;
-=======
-
-
-
-
-
-
-
-
-
-
-
-// -----------------------------------------------------------------------------------------------------------------
-//一个学校的详情
-router.get("/school/detail", function (req, res) {
-  // let id = 1;
-  let id = req.query.id;
-  let sql = "SELECT * FROM famousSchools where Id=" + id;
->>>>>>> 3466c26f690f3da0c3fa6f9435e38e5b099591f1
   db.query(sql, function (err, results) {
     if (err) {} else {
       res.json({
